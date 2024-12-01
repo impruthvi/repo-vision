@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import useGetProjects from "@/hooks/use-get-projects";
+import { useSelectedProject } from "@/hooks/use-selected-project";
 
 const items = [
   {
@@ -51,24 +53,12 @@ const items = [
   },
 ];
 
-const projects = [
-  {
-    name: "p 1",
-    id: 1,
-  },
-  {
-    name: "Project 2",
-    id: 2,
-  },
-  {
-    name: "Project 3",
-    id: 3,
-  },
-];
-
 const AppSidebar = () => {
   const pathname = usePathname();
   const { open } = useSidebar();
+  const { projects } = useGetProjects();
+  const { projectId, setProjectId } = useSelectedProject();
+
   return (
     <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
@@ -108,16 +98,20 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {projects.map((project) => (
-                <SidebarMenuItem key={project.name}>
+              {projects?.map((project) => (
+                <SidebarMenuItem key={project.name} className="cursor-pointer">
                   <SidebarMenuButton asChild>
-                    <div className="">
+                    <div
+                      className=""
+                      onClick={() => {
+                        setProjectId(project.id);
+                      }}
+                    >
                       <div
                         className={cn(
                           "text-primary flex size-6 items-center justify-center rounded-sm border bg-white text-sm",
                           {
-                            "bg-primary text-white": true,
-                            // "bg-primary text-white": projectId === project.id,
+                            "bg-primary text-white": projectId === project.id,
                           },
                         )}
                       >
