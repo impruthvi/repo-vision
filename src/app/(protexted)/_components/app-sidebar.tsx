@@ -99,7 +99,7 @@ const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {projects?.map((project) => (
-                <SidebarMenuItem key={project.name} className="cursor-pointer">
+                <SidebarMenuItem key={project.id} className="cursor-pointer">
                   <SidebarMenuButton asChild>
                     <div
                       className=""
