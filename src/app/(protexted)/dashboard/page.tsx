@@ -3,6 +3,7 @@
 import useGetProjects from "@/hooks/use-get-projects";
 import { ExternalLinkIcon, GithubIcon } from "lucide-react";
 import Link from "next/link";
+import CommitLog from "./_components/comit-log";
 
 const Dashboard = () => {
   const { project } = useGetProjects();
@@ -11,7 +12,7 @@ const Dashboard = () => {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-y-4">
         {/* Github Link */}
-        <div className="bg-primary w-fit rounded-md px-4 py-3">
+        <div className="w-fit rounded-md bg-primary px-4 py-3">
           <div className="flex items-center">
             <GithubIcon className="size-5 text-white" />
             <div className="ml-2">
@@ -35,12 +36,14 @@ const Dashboard = () => {
       </div>
 
       <div className="mt-4">
-        <div className="fap-4 grid grid-cols-4 sm:grid-cols-5">
+        <div className="grid grid-cols-4 gap-4 sm:grid-cols-5">
           Ask a Question Card Meeting Card
         </div>
       </div>
 
-      <div className="mt-8">Commit Logs</div>
+      <div className="mt-8">
+        <CommitLog />
+      </div>
     </div>
   );
 };
