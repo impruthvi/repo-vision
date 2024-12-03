@@ -56,7 +56,7 @@ ${diff}`;
 
 export const aiSummarizeCode = async (doc: Document) => {
   const code = doc.pageContent.slice(0, 1000); // Limit to 1000 characters
-  const response = await model.generateContent([
+  const prompt = [
     `You are an experienced senior software engineer specializing in onboarding junior engineers to new codebases.`,
     `Your task is to explain the purpose and functionality of the following code snippet from the file "${doc.metadata.source}" to a junior engineer in simple terms.`,
     `Here is the code snippet:
@@ -64,9 +64,15 @@ export const aiSummarizeCode = async (doc: Document) => {
     ${code}
     ---
     Provide a concise summary (no more than 100 words) explaining what the code does and its purpose in the context of the codebase. Focus on clarity and simplicity.`,
-  ]);
+  ];
 
-  return response.response.text();
+  try {
+    const response = await model.generateContent(prompt);
+    return response.response.text();
+  } catch (error) {
+    console.error("Error summarizing the code snippet:", error);
+    throw new Error("Failed to generate a code summary.");
+  }
 };
 
 export const generateEmbedding = async (summery: string) => {
