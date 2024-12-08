@@ -49,30 +49,28 @@ export const indexGithubRepo = async (
     const allEmbeddings = await generateEmbeddings(docs);
 
     // Use transaction to ensure atomicity
-    await db.$transaction(async (tx) => {
-      const results = await Promise.allSettled(
-        allEmbeddings.map(async (embedding, index) => {
-          if (!embedding) return;
+    const results = await Promise.allSettled(
+      allEmbeddings.map(async (embedding, index) => {
+        if (!embedding) return;
 
-          const sourceCodeEmbedding = await tx.sourceCodeEmbedding.create({
-            data: {
-              projectId,
-              sourceCode: embedding.sourceCode,
-              fileName: embedding.fileName,
-              summary: embedding.summary,
-            },
-          });
+        const sourceCodeEmbedding = await db.sourceCodeEmbedding.create({
+          data: {
+            projectId,
+            sourceCode: embedding.sourceCode,
+            fileName: embedding.fileName,
+            summary: embedding.summary,
+          },
+        });
 
-          await tx.$executeRaw`UPDATE "SourceCodeEmbedding" SET "summaryEmbedding" = ${embedding.embedding}::vector WHERE "id" = ${sourceCodeEmbedding.id}`;
-        }),
-      );
+        await db.$executeRaw`UPDATE "SourceCodeEmbedding" SET "summaryEmbedding" = ${embedding.embedding}::vector WHERE "id" = ${sourceCodeEmbedding.id}`;
+      }),
+    );
 
-      // Log errors for debugging purposes
-      results.forEach((result, index) => {
-        if (result.status === "rejected") {
-          console.error(`Error processing embedding ${index}:`, result.reason);
-        }
-      });
+    // Log errors for debugging purposes
+    results.forEach((result, index) => {
+      if (result.status === "rejected") {
+        console.error(`Error processing embedding ${index}:`, result.reason);
+      }
     });
 
     console.log("Repository indexed successfully.");
