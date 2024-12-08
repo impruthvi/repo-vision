@@ -22,6 +22,7 @@ model User {
     createdAt      DateTime         @default(now())
     updatedAt      DateTime         @updatedAt
     UserToProjects UserToProjects[]
+    Question       Question[]
 }
 
 model Project {
@@ -36,6 +37,7 @@ model Project {
     UserToProjects      UserToProjects[]
     Commit              Commit[]
     SourceCodeEmbedding SourceCodeEmbedding[]
+    Question            Question[]
 }
 
 model UserToProjects {
@@ -78,4 +80,22 @@ model SourceCodeEmbedding {
 
     projectId String
     project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Question {
+    id String @id @default(cuid())
+
+    question String
+    answer   String
+
+    fileReference Json?
+
+    projectId String
+    project   Project @relation(fields: [projectId], references: [id])
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
