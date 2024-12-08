@@ -34,6 +34,7 @@ import { toast } from "sonner";
 
 import CodeReference from "./code-references";
 import { Loader2, Save, X } from "lucide-react";
+import useRefetch from "@/hooks/use-refetch";
 
 // Form Validation Schema
 const formSchema = z.object({
@@ -62,6 +63,7 @@ const AskQuestionCard = () => {
   const [loading, setLoading] = useState(false);
   const [fileReferences, setFileReferences] = useState<FileReference[]>([]);
   const [answer, setAnswer] = useState("");
+  const refetch = useRefetch();
 
   // API Mutation
   const saveAnswer = api.projects.saveAnswer.useMutation();
@@ -122,10 +124,11 @@ const AskQuestionCard = () => {
         onSuccess: () => {
           toast.success("Answer saved successfully");
           setOpen(false);
+          refetch();
           form.reset();
         },
-        onError: (err) => {
-          toast.error(err.message || "Failed to save answer");
+        onError: () => {
+          toast.error("Failed to save answer");
         },
       },
     );
