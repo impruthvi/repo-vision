@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { Card } from "@/components/ui/card";
 import { useDropzone } from "react-dropzone";
 import { uploadFile } from "@/lib/firebase";
@@ -46,6 +47,22 @@ const MeetingCard = () => {
             </Button>
           </div>
         </>
+      )}
+      {isUploading && (
+        <div className="flex items-center justify-center">
+          <CircularProgressbar
+            value={process}
+            text={`${process}%`}
+            className="size-20"
+            styles={buildStyles({
+              pathColor: "#2563eb",
+              textColor: "#2563eb",
+            })}
+          />
+          <p className="text-center text-sm text-gray-500">
+            Uploading your meeting...
+          </p>
+        </div>
       )}
     </Card>
   );
