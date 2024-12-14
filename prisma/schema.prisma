@@ -102,8 +102,10 @@ model Question {
 }
 
 model Meeting {
-    id         String @id @default(cuid())
+    id         String        @id @default(cuid())
     meetingUrl String
+    name       String
+    status     MeetingStatus @default(PROCESSING)
 
     projectId String
     project   Project @relation(fields: [projectId], references: [id])
@@ -111,6 +113,11 @@ model Meeting {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     Issue     Issue[]
+}
+
+enum MeetingStatus {
+    PROCESSING
+    COMPLETED
 }
 
 model Issue {
